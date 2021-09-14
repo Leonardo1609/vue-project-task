@@ -8,3 +8,7 @@ export const getActiveBgTheme: Getter<IUiState, any> = (state) => {
 export const getActiveTextTheme: Getter<IUiState, any> = (state) => {
 	return `text-${state.activeTheme}`;
 };
+
+export const getActiveBorderTheme: Getter<IUiState, any> = (state) => {
+	return `border-${state.activeTheme}`;
+};

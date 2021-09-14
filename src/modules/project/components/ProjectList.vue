@@ -11,6 +11,7 @@
 			<ProjectInput
 				v-model:search-term="searchTerm"
 				v-model:add-term="addTerm"
+				@add-project="addProject"
 			/>
 		</div>
 		<div class="projects-container mt-10">
@@ -27,7 +28,7 @@
 
 <script lang="ts">
 import { defineAsyncComponent, defineComponent } from "vue";
-import { mapGetters, mapMutations, mapState } from "vuex";
+import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import { IProject } from "../types/project.interface";
 
 export default defineComponent({
@@ -46,7 +47,7 @@ export default defineComponent({
 		),
 		ThemeActivator: defineAsyncComponent(() =>
 			import(
-				/* webpackChunkName: "ThemeActivator" */ "../components/ThemeActivator.vue"
+				/* webpackChunkName: "ThemeActivator" */ "@/components/ThemeActivator.vue"
 			)
 		),
 
@@ -57,9 +58,19 @@ export default defineComponent({
 		),
 	},
 	computed: {
-		...mapGetters("project", ["getProjectsByTerm"]),
+		...mapGetters("project", ["getProjectsByTerm", "getProjectByName"]),
 		filteredProjects(): IProject[] {
 			return this.getProjectsByTerm(this.searchTerm);
+		},
+	},
+	methods: {
+		...mapActions("project", ["addNewProject"]),
+		async addProject() {
+			if (this.getProjectByName(this.addTerm)) {
+				return;
+			}
+			await this.addNewProject(this.addTerm);
+			this.addTerm = "";
 		},
 	},
 });

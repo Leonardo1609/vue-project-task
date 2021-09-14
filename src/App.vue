@@ -1,6 +1,22 @@
 <template>
-	<router-view />
+	<div v-if="loadingUser">Loading...</div>
+
+	<router-view v-else />
 </template>
+<script lang="ts">
+import { verifyAuthentication } from "@/router/verifyAuthentication";
+import { defineComponent } from "vue";
+import { mapState } from "vuex";
+
+export default defineComponent({
+	computed: {
+		...mapState("auth", ["loadingUser"]),
+	},
+	created() {
+		verifyAuthentication();
+	},
+});
+</script>
 
 <style>
 #app {

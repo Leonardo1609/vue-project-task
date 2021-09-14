@@ -1,7 +1,7 @@
 <template>
 	<router-link
 		:class="activeClass"
-		class="block rounded-full px-5 py-3 text-white text-left text-base"
+		class="block rounded-xl px-5 py-3 text-white text-left text-base"
 		@click="setActiveProjectId(project.id)"
 		:to="{
 			name: 'project-view',

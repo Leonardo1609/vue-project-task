@@ -1,12 +1,12 @@
 <template>
 	<div class="w-full">
-		<div class="flex mb-5">
+		<div class="flex mb-2">
 			<button
 				:class="[
 					getActiveBgTheme,
 					{ 'opacity-50': currentAction === 'add' },
 				]"
-				class="flex-1 rounded-tl-full rounded-bl-full text-white text-lg py-2 px-3"
+				class="flex-1 rounded-tl-xl rounded-bl-xl text-white text-sm py-1 px-3"
 				@click="changeCurrentAction('search')"
 			>
 				Buscar
@@ -16,17 +16,17 @@
 					getActiveBgTheme,
 					{ 'opacity-50': currentAction === 'search' },
 				]"
-				class="flex-1 rounded-tr-full rounded-br-full text-white text-lg py-2 px-3"
+				class="flex-1 rounded-tr-xl rounded-br-xl text-white text-sm py-1 px-3"
 				@click="changeCurrentAction('add')"
 			>
 				Agregar
 			</button>
 		</div>
-		<form class="flex">
+		<form class="flex" @submit.prevent="$emit('addProject')">
 			<input
 				v-if="currentAction === 'search'"
 				id="search-input"
-				class="w-full outline-none border-none px-5 text-sm bg-gray-700 text-white "
+				class="w-full rounded-tl-xl rounded-bl-xl outline-none border-none px-5 text-sm bg-gray-700 text-white"
 				placeholder="Buscar Proyecto"
 				type="text"
 				:value="searchTerm"
@@ -36,14 +36,15 @@
 				v-else
 				placeholder="Nuevo proyecto"
 				id="add-input"
-				class="w-full outline-none border-none px-5 text-sm bg-gray-700 text-white"
+				class="w-full rounded-tl-xl rounded-bl-xl outline-none border-none px-5 text-sm bg-gray-700 text-white"
 				type="text"
 				:value="addTerm"
 				@input="$emit('update:addTerm', $event.target.value)"
 			/>
 			<button
 				:class="getActiveBgTheme"
-				class="flex-1 rounded-tr-full rounded-br-full text-white text-lg py-2 px-5"
+				class="flex-1 rounded-tr-xl rounded-br-xl text-white text-lg py-2 px-5"
+				:type="currentAction === 'search' ? 'button' : 'submit'"
 			>
 				<i :class="iconButton" class="fas"></i>
 			</button>
@@ -89,7 +90,7 @@ export default defineComponent({
 			}
 		},
 	},
-	emits: ["update:searchTerm", "update:addTerm"],
+	emits: ["update:searchTerm", "update:addTerm", "addProject"],
 });
 </script>
 

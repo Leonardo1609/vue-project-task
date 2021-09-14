@@ -1,6 +1,7 @@
 import { IProjectState } from "../types/state.interface";
 
 export default (): IProjectState => ({
+	loadingTasks: false,
 	projects: [
 		{
 			id: "1",
@@ -13,19 +14,35 @@ export default (): IProjectState => ({
 			slug: "project_2",
 		},
 	],
-	activeProjectId: "1",
+	activeProjectId: "",
 	tasks: [
 		{
 			projectId: "1",
 			id: "1",
 			description: "Task 1",
 			done: false,
+			loadingChange: false,
 		},
 		{
 			projectId: "1",
 			id: "2",
 			description: "Task 2",
 			done: true,
+			loadingChange: false,
+		},
+		{
+			projectId: "1",
+			id: "3",
+			description: "Task 3",
+			done: false,
+			loadingChange: false,
+		},
+		{
+			projectId: "1",
+			id: "4",
+			description: "Task 4",
+			done: true,
+			loadingChange: false,
 		},
 	],
 });

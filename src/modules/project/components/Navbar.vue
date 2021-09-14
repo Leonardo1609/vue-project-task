@@ -1,7 +1,7 @@
 <template>
-	<nav class="w-100">
+	<nav class="w-100 px-10">
 		<div class="container flex justify-between mx-auto">
-			<h1 class="text-white font-bold text-xl">Hello Leonardo</h1>
+			<h2 class="text-white font-bold text-xl">Hello {{ user.username }}</h2>
 			<button
 				:class="getActiveBgTheme"
 				class="rounded-full text-gray-900 text-lg py-1 px-3"
@@ -13,11 +13,12 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 export default {
 	name: "Navbar",
 	computed: {
 		...mapGetters("ui", ["getActiveBgTheme"]),
+		...mapState("auth", ["user"]),
 	},
 };
 </script>

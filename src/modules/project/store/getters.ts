@@ -10,3 +10,24 @@ export const getProjectsByTerm: Getter<IProjectState, any> = (state) => (
 		project.name.toLowerCase().includes(term.toLowerCase())
 	);
 };
+
+export const getProjectByName: Getter<IProjectState, any> = (state) => (
+	name: string
+): IProject | undefined => {
+	const project = state.projects.find((project) => project.name === name);
+	return project;
+};
+
+export const getProjectBySlug: Getter<IProjectState, any> = (state) => (
+	slug: string
+): IProject | undefined => {
+	const project = state.projects.find((project) => project.slug === slug);
+	return project;
+};
+
+export const getTasks: Getter<IProjectState, any> = (state) => {
+	return [
+		...state.tasks.filter((task) => task.done),
+		...state.tasks.filter((task) => !task.done),
+	];
+};

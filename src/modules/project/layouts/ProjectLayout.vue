@@ -4,7 +4,9 @@
 			<ProjectList />
 		</div>
 		<div class="w-4/6 p-10 bg-gray-900 overflow-auto">
-			<Navbar />
+			<div class="mb-5">
+				<Navbar />
+			</div>
 			<router-view></router-view>
 		</div>
 	</div>
