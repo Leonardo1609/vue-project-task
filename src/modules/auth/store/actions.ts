@@ -4,6 +4,7 @@ import { FirebaseError } from "firebase/app";
 import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
+	signOut,
 	updateProfile,
 } from "firebase/auth";
 import { Action } from "vuex";
@@ -45,6 +46,7 @@ export const loginUser: Action<IAuthState, any> = async (
 			payload.password
 		);
 		commit("setUser", {
+			uid: user.uid,
 			username: user.displayName,
 			email: user.email,
 		} as IUser);
@@ -54,4 +56,9 @@ export const loginUser: Action<IAuthState, any> = async (
 			console.log(err.message);
 		}
 	}
+};
+
+export const logoutUser: Action<IAuthState, any> = async ({ commit }) => {
+	await signOut(firebaseAuth);
+	commit("logoutUser");
 };

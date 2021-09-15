@@ -4,8 +4,12 @@ import authRouter from "@/modules/auth/router";
 
 const routes: Array<RouteRecordRaw> = [
 	{
-		// "/"
-		...authRouter
+		path: "/",
+		redirect: { name: "projects" },
+	},
+	{
+		// "/auth"
+		...authRouter,
 	},
 	{
 		// "/projects"

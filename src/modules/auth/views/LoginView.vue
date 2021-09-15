@@ -1,7 +1,7 @@
 <template>
 	<form
 		@submit.prevent="login"
-		class="w-3/4 md:w-2/4 lg:w-1/4 px-10 py-14  bg-gray-900 rounded-xl"
+		class="w-3/4 md:w-2/4 lg:w-1/4 px-10 py-14 bg-gray-900 rounded-xl relative"
 	>
 		<h1 class="text-white font-bold text-2xl mb-10">Login</h1>
 		<div class="absolute right-5 top-5">

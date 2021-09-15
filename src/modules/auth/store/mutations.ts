@@ -13,3 +13,9 @@ export const setLoadingUser: Mutation<IAuthState> = (
 ) => {
 	state.loadingUser = loading;
 };
+
+export const logoutUser: Mutation<IAuthState> = (state) => {
+	state.loadingUser = false;
+	state.authenticated = false;
+	state.user = null;
+};

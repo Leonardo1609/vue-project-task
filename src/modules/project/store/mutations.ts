@@ -64,3 +64,10 @@ export const addNewProject: Mutation<IProjectState> = (
 export const addNewTask: Mutation<IProjectState> = (state, task: ITask) => {
 	state.tasks = [task, ...state.tasks];
 };
+
+export const setProjects: Mutation<IProjectState> = (
+	state,
+	projects: IProject[]
+) => {
+	state.projects = [...projects];
+};

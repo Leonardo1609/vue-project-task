@@ -1,3 +1,4 @@
+import { verifyAuthentication } from "@/router/verifyAuthentication";
 import store from "@/store";
 import { RouteRecordRaw } from "vue-router";
 
@@ -5,6 +6,7 @@ const router: RouteRecordRaw = {
 	path: "/projects",
 	name: "projects",
 	component: () => import("@/modules/project/layouts/ProjectLayout.vue"),
+	beforeEnter: [verifyAuthentication],
 	children: [
 		{
 			path: ":slug",
@@ -19,6 +21,5 @@ const router: RouteRecordRaw = {
 		},
 	],
 };
-
 
 export default router;

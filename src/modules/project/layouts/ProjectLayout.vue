@@ -14,6 +14,7 @@
 
 <script>
 import { defineAsyncComponent } from "vue";
+import { mapActions } from "vuex";
 export default {
 	components: {
 		Navbar: defineAsyncComponent(() =>
@@ -24,6 +25,12 @@ export default {
 				/* webpackChunkName "ProjectList" */ "../components/ProjectList.vue"
 			)
 		),
+	},
+	methods: {
+		...mapActions("project", ["setProjects"]),
+	},
+	async created() {
+		await this.setProjects();
 	},
 };
 </script>

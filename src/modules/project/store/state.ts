@@ -3,16 +3,16 @@ import { IProjectState } from "../types/state.interface";
 export default (): IProjectState => ({
 	loadingTasks: false,
 	projects: [
-		{
-			id: "1",
-			name: "Project 1",
-			slug: "project_1",
-		},
-		{
-			id: "2",
-			name: "Project 2",
-			slug: "project_2",
-		},
+		// {
+		// 	id: "1",
+		// 	name: "Project 1",
+		// 	slug: "project_1",
+		// },
+		// {
+		// 	id: "2",
+		// 	name: "Project 2",
+		// 	slug: "project_2",
+		// },
 	],
 	activeProjectId: "",
 	tasks: [
