@@ -1,10 +1,13 @@
 <template>
 	<div class="px-10 ">
-		<h2 class="text-white font-bold text-2xl">
+		<h2 v-if="currentProject" class="text-white font-bold text-2xl mb-6">
 			Tasks of {{ currentProject.name }}
 		</h2>
 
-		<form class="flex mt-10" @submit.prevent="submitNewTask">
+		<h3 class="mb-5 text-white" v-if="projectTasks.length === 0">
+			No tienes tareas en este proyecto, agrega alguna
+		</h3>
+		<form class="flex" @submit.prevent="submitNewTask">
 			<input
 				type="text"
 				v-model="newTask"
@@ -18,6 +21,7 @@
 				<i class="fas fa-plus"></i>
 			</button>
 		</form>
+		<div></div>
 		<ul class="mt-10">
 			<li class="text-white" v-for="task in projectTasks" :key="task.id">
 				<TaskInput :task="task" />
@@ -68,16 +72,12 @@ export default defineComponent({
 			this.newTask = "";
 		},
 	},
-	beforeMount() {
-		this.setActiveProjectId(this.currentProject.id);
-	},
-	async created() {
-		/* await this.setTasksByProyectId(this.currentProject.id); */
-	},
 	watch: {
-		async slug() {
-			this.setActiveProjectId(this.currentProject.id);
-			/* await this.setTasksByProyectId(this.currentProject.id); */
+		async currentProject() {
+			if (this.currentProject) {
+				this.setActiveProjectId(this.currentProject.id);
+				await this.setTasksByProyectId();
+			}
 		},
 	},
 });

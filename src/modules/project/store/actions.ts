@@ -3,33 +3,63 @@ import { IProject, ITask } from "../types/project.interface";
 import { IProjectState } from "../types/state.interface";
 import slug from "slug";
 import { db } from "@/firebase/db";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, updateDoc } from "firebase/firestore";
 
-export const setTasksByProyectId: Action<IProjectState, any> = async (
-	{ commit },
-	id: string
-) => {
+export const setTasksByProyectId: Action<IProjectState, any> = async ({
+	commit,
+	state,
+	rootState,
+}) => {
+	const activeProjectId = state.activeProjectId;
+	const userId = rootState.auth.user.uid;
 	commit("setLoadingTasks", true);
-	console.log(id);
+	const querySnapshot = await getDocs(
+		collection(
+			db,
+			`${userId}/project-task/projects/${activeProjectId}/tasks`
+		)
+	);
+	const tasks: ITask[] = [];
+	querySnapshot.forEach((doc) => {
+		tasks.push({
+			...(doc.data() as ITask),
+			id: doc.id,
+		});
+	});
+	commit("setTasks", tasks);
 	commit("setLoadingTasks", false);
 };
 
 export const addNewTask: Action<IProjectState, any> = async (
-	{ commit, state },
+	{ commit, state, rootState },
 	description: any
 ) => {
-	const newTask: ITask = {
-		id: "",
-		projectId: state.activeProjectId,
+	const activeProjectId = state.activeProjectId;
+	const userId = rootState.auth.user.uid;
+	let newTask: ITask = {
+		projectId: activeProjectId,
 		description,
 		loadingChange: false,
 		done: false,
 	};
 
+	const docRef = await addDoc(
+		collection(
+			db,
+			`${userId}/project-task/projects/${activeProjectId}/tasks`
+		),
+		newTask
+	);
+
+	newTask = {
+		...newTask,
+		id: docRef.id,
+	};
+
 	commit("addNewTask", newTask);
 };
 export const updateTask: Action<IProjectState, any> = async (
-	{ commit },
+	{ commit, state, rootState },
 	{
 		taskId,
 		property,
@@ -40,11 +70,19 @@ export const updateTask: Action<IProjectState, any> = async (
 		value: boolean | string;
 	}
 ) => {
+	const activeProjectId = state.activeProjectId;
+	const userId = rootState.auth.user.uid;
 	commit("setLoadingTaskChange", { taskId, loadingChange: true });
-	setTimeout(() => {
-		commit("updateTask", { taskId, property, value });
-		commit("setLoadingTaskChange", { taskId, loadingChange: false });
-	}, 3000);
+	const taskDoc = doc(
+		db,
+		`${userId}/project-task/projects/${activeProjectId}/tasks/${taskId}`
+	);
+	await updateDoc(taskDoc, {
+		[property]: value
+	})
+
+	commit("updateTask", { taskId, property, value });
+	commit("setLoadingTaskChange", { taskId, loadingChange: false });
 };
 
 export const addNewProject: Action<IProjectState, any> = async (
