@@ -1,11 +1,11 @@
 <template>
-	<div class="flex items-center">
+	<div class="input-container flex items-center relative">
 		<input
 			type="checkbox"
 			v-model="doneValue"
 			:disabled="task.loadingChange"
 			:class="checkboxClasses"
-			class="rounded-full form-tick appearance-none h-5 w-5 border checked:border-transparent focus:outline-none mr-2"
+			class="rounded-full form-tick appearance-none h-5 w-5 border checked:border-transparent focus:outline-none mr-2 cursor-pointer"
 		/>
 		<input
 			type="text"
@@ -15,6 +15,11 @@
 			:disabled="task.loadingChange"
 			class="bg-gray-900 w-full border-none outline-none focus:bg-gray-800 py-2 px-4"
 		/>
+		<i
+			@click="deleteTask"
+			:class="getActiveTextTheme"
+			class="fas fa-times absolute right-3 top-3 cursor-pointer"
+		></i>
 	</div>
 </template>
 
@@ -38,7 +43,11 @@ export default defineComponent({
 		};
 	},
 	computed: {
-		...mapGetters("ui", ["getActiveBgTheme", "getActiveBorderTheme"]),
+		...mapGetters("ui", [
+			"getActiveBgTheme",
+			"getActiveTextTheme",
+			"getActiveBorderTheme",
+		]),
 		checkboxClasses(): string {
 			return `${this.getActiveBorderTheme} checked:${this.getActiveBgTheme}`;
 		},
@@ -57,12 +66,10 @@ export default defineComponent({
 		},
 	},
 	methods: {
-		...mapActions("project", ["updateTask"]),
+		...mapActions("project", ["updateTask", "removeTask"]),
 		updateDescriptionTask(event: Event) {
+			event.stopPropagation();
 			const target = event.target as HTMLInputElement;
-			if (event instanceof KeyboardEvent) {
-				target.blur();
-			}
 			if (target.value !== this.task.description) {
 				this.updateTask({
 					taskId: this.task.id,
@@ -71,8 +78,19 @@ export default defineComponent({
 				});
 			}
 		},
+
+		async deleteTask() {
+			await this.removeTask(this.task.id);
+		},
 	},
 });
 </script>
 
-<style></style>
+<style scoped>
+i {
+	display: none !important;
+}
+.input-container:hover i {
+	display: block !important;
+}
+</style>

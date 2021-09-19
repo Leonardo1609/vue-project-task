@@ -5,7 +5,7 @@ import authRouter from "@/modules/auth/router";
 const routes: Array<RouteRecordRaw> = [
 	{
 		path: "/",
-		redirect: { name: "projects" },
+		redirect: { name: "no-project" },
 	},
 	{
 		// "/auth"

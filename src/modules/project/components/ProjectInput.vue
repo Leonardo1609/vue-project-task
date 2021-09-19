@@ -4,22 +4,22 @@
 			<button
 				:class="[
 					getActiveBgTheme,
-					{ 'opacity-50': currentAction === 'add' },
+					{ 'opacity-50': currentAction === 'search' },
 				]"
 				class="flex-1 rounded-tl-xl rounded-bl-xl text-white text-sm py-1 px-3"
-				@click="changeCurrentAction('search')"
+				@click="changeCurrentAction('add')"
 			>
-				Buscar
+				Add
 			</button>
 			<button
 				:class="[
 					getActiveBgTheme,
-					{ 'opacity-50': currentAction === 'search' },
+					{ 'opacity-50': currentAction === 'add' },
 				]"
 				class="flex-1 rounded-tr-xl rounded-br-xl text-white text-sm py-1 px-3"
-				@click="changeCurrentAction('add')"
+				@click="changeCurrentAction('search')"
 			>
-				Agregar
+				Search
 			</button>
 		</div>
 		<form class="flex" @submit.prevent="$emit('addProject')">
@@ -27,14 +27,14 @@
 				v-if="currentAction === 'search'"
 				id="search-input"
 				class="w-full rounded-tl-xl rounded-bl-xl outline-none border-none px-5 text-sm bg-gray-700 text-white"
-				placeholder="Buscar Proyecto"
+				placeholder="Search Project"
 				type="text"
 				:value="searchTerm"
 				@input="$emit('update:searchTerm', $event.target.value)"
 			/>
 			<input
 				v-else
-				placeholder="Nuevo proyecto"
+				placeholder="New Project"
 				id="add-input"
 				class="w-full rounded-tl-xl rounded-bl-xl outline-none border-none px-5 text-sm bg-gray-700 text-white"
 				type="text"
@@ -70,7 +70,7 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			currentAction: "search",
+			currentAction: "add",
 		};
 	},
 	computed: {

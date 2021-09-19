@@ -1,5 +1,4 @@
 import { verifyAuthentication } from "@/router/verifyAuthentication";
-import store from "@/store";
 import { RouteRecordRaw } from "vue-router";
 
 const router: RouteRecordRaw = {
@@ -8,6 +7,14 @@ const router: RouteRecordRaw = {
 	component: () => import("@/modules/project/layouts/ProjectLayout.vue"),
 	beforeEnter: [verifyAuthentication],
 	children: [
+		{
+			path: "",
+			name: "no-project",
+			component: () =>
+				import(
+					/* webpackChunkName "NoProjectView" */ "../views/NoProjectView.vue"
+				),
+		},
 		{
 			path: ":slug",
 			name: "project-view",

@@ -20,9 +20,8 @@ export const getProjectByName: Getter<IProjectState, any> = (state) => (
 
 export const getProjectBySlug: Getter<IProjectState, any> = (state) => (
 	slug: string
-): IProject | undefined => {
-	const project = state.projects.find((project) => project.slug === slug);
-	return project;
+): IProject | undefined | boolean => {
+	return state.projects.find((project) => project.slug === slug);
 };
 
 export const getTasks: Getter<IProjectState, any> = (state) => {

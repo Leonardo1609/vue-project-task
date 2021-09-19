@@ -14,7 +14,7 @@
 				@add-project="addProject"
 			/>
 		</div>
-		<div class="projects-container mt-10">
+		<div class="projects-container mt-10" v-if="filteredProjects.length">
 			<div
 				class="mt-2"
 				v-for="project in filteredProjects"
@@ -27,6 +27,7 @@
 </template>
 
 <script lang="ts">
+import { useToast } from "vue-toastification";
 import { defineAsyncComponent, defineComponent } from "vue";
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import { IProject } from "../types/project.interface";
@@ -37,6 +38,7 @@ export default defineComponent({
 		return {
 			searchTerm: "",
 			addTerm: "",
+			toast: useToast(),
 		};
 	},
 	components: {
@@ -66,10 +68,14 @@ export default defineComponent({
 	methods: {
 		...mapActions("project", ["addNewProject"]),
 		async addProject() {
-			if (this.getProjectByName(this.addTerm)) {
+			if (
+				this.getProjectByName(this.addTerm.trim()) ||
+				this.addTerm.trim() === ""
+			) {
 				return;
 			}
-			await this.addNewProject(this.addTerm);
+			await this.addNewProject(this.addTerm.trim());
+			this.toast.success(this.addTerm + " added successfully");
 			this.addTerm = "";
 		},
 	},

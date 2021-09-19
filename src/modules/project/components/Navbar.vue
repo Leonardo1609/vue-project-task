@@ -7,7 +7,7 @@
 			<button
 				:class="getActiveBgTheme"
 				class="rounded-full text-gray-900 text-lg py-1 px-3"
-				@click="logoutUser"
+				@click="logout"
 			>
 				<i class="fas fa-sign-out-alt"></i>
 			</button>
@@ -25,6 +25,10 @@ export default {
 	},
 	methods: {
 		...mapActions("auth", ["logoutUser"]),
+		logout() {
+			this.logoutUser;
+			this.$router.push({ name: "login" });
+		},
 	},
 };
 </script>

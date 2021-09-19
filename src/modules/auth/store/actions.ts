@@ -50,7 +50,7 @@ export const loginUser: Action<IAuthState, any> = async (
 			username: user.displayName,
 			email: user.email,
 		} as IUser);
-		router.push({ name: "projects" });
+		router.push({ name: "no-project" });
 	} catch (err) {
 		if (err instanceof FirebaseError) {
 			console.log(err.message);
