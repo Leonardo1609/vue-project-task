@@ -37,6 +37,11 @@
 		>
 			Login
 		</button>
+		<div class="mt-5">
+			<router-link class="text-white text-sm" :to="{ name: 'register' }"
+				>Don't have an account?</router-link
+			>
+		</div>
 	</form>
 </template>
 

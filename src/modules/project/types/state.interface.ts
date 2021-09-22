@@ -5,4 +5,6 @@ export interface IProjectState {
 	projects: IProject[];
 	tasks: ITask[];
 	activeProjectId: string;
+	addingTask: boolean;
+	addingProject: boolean;
 }

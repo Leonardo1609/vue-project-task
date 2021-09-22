@@ -1,22 +1,25 @@
 <template>
 	<div>
-		<div class="flex justify-between">
+		<div class="flex justify-between pr-1">
 			<h1 class="text-xl text-left font-bold text-white">
 				<i class="fas fa-th-list mr-3"></i>
 				Project List
 			</h1>
 			<ThemeActivator />
 		</div>
-		<div class="mt-10">
+		<div class="mt-10 pr-1">
 			<ProjectInput
 				v-model:search-term="searchTerm"
 				v-model:add-term="addTerm"
 				@add-project="addProject"
 			/>
 		</div>
-		<div class="projects-container mt-10" v-if="filteredProjects.length">
+		<div
+			class="projects-container mt-10 pr-1"
+			v-if="filteredProjects.length"
+		>
 			<div
-				class="mt-2"
+				class="mb-2"
 				v-for="project in filteredProjects"
 				:key="project.id"
 			>
@@ -60,6 +63,7 @@ export default defineComponent({
 		),
 	},
 	computed: {
+		...mapState("project", ["addingProject"]),
 		...mapGetters("project", ["getProjectsByTerm", "getProjectByName"]),
 		filteredProjects(): IProject[] {
 			return this.getProjectsByTerm(this.searchTerm);
@@ -70,7 +74,8 @@ export default defineComponent({
 		async addProject() {
 			if (
 				this.getProjectByName(this.addTerm.trim()) ||
-				this.addTerm.trim() === ""
+				this.addTerm.trim() === "" ||
+				this.addingProject
 			) {
 				return;
 			}
@@ -81,3 +86,24 @@ export default defineComponent({
 	},
 });
 </script>
+<style scoped>
+.projects-container {
+	height: calc(100vh - 250px);
+	overflow: auto;
+}
+::-webkit-scrollbar {
+	width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 5px grey;
+	border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: gray;
+	border-radius: 10px;
+}
+</style>

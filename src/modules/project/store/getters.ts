@@ -30,3 +30,10 @@ export const getTasks: Getter<IProjectState, any> = (state) => {
 		...state.tasks.filter((task) => !task.done),
 	];
 };
+
+export const getProjectProgress: Getter<IProjectState, any> = (state) => {
+	const tasksQuantity = state.tasks.length;
+	const tasksDone = state.tasks.filter((task) => task.done).length;
+
+	return (tasksDone / tasksQuantity) * 100;
+};

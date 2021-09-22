@@ -4,9 +4,6 @@
 			Tasks of {{ currentProject.name }}
 		</h2>
 
-		<h3 class="mb-5 text-white" v-if="projectTasks.length === 0">
-			No tasks on this project, add one
-		</h3>
 		<form class="flex" @submit.prevent="submitNewTask">
 			<input
 				type="text"
@@ -21,21 +18,42 @@
 				<i class="fas fa-plus"></i>
 			</button>
 		</form>
-		<div></div>
-		<ul class="mt-10">
-			<li class="text-white" v-for="task in projectTasks" :key="task.id">
-				<TaskInput :task="task" />
-			</li>
-		</ul>
+
+		<h3 class="mt-5 text-white" v-if="projectTasks.length === 0 && !loadingTasks">
+			No tasks on this project, add one
+		</h3>
+		<template v-if="projectTasks.length && !loadingTasks">
+			<ul class="mt-10 tasks-container">
+				<li
+					class="text-white"
+					v-for="task in projectTasks"
+					:key="task.id"
+				>
+					<TaskInput :task="task" />
+				</li>
+			</ul>
+			<div class="w-full mt-5">
+				<div
+					:class="getActiveBorderTheme"
+					class="mx-auto w-3/4 rounded-full overflow-hidden border h-4"
+				>
+					<div
+						:class="getActiveBgTheme"
+						class="h-4"
+						:style="{ width: getProjectProgress + '%' }"
+					></div>
+				</div>
+			</div>
+		</template>
 	</div>
 	<div v-else>
-		<p>Loading Project</p>
+		<p class="text-center text-white text-xl">Loading Project</p>
 	</div>
 </template>
 
 <script lang="ts">
 import { defineAsyncComponent, defineComponent, PropType } from "vue";
-import { mapActions, mapGetters, mapMutations } from "vuex";
+import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import { IProject, ITask } from "../types/project.interface";
 
 export default defineComponent({
@@ -60,11 +78,13 @@ export default defineComponent({
 		};
 	},
 	computed: {
-		...mapGetters("ui", ["getActiveBgTheme"]),
-		...mapGetters("project", ["getProjectBySlug", "getTasks"]),
-		/* currentProject(): IProject { */
-		/* 	return this.getProjectBySlug(this.slug); */
-		/* }, */
+		...mapState("project", ["addingTask", "loadingTasks"]),
+		...mapGetters("ui", ["getActiveBgTheme", "getActiveBorderTheme"]),
+		...mapGetters("project", [
+			"getProjectBySlug",
+			"getTasks",
+			"getProjectProgress",
+		]),
 		projectTasks(): ITask[] {
 			return this.getTasks;
 		},
@@ -77,8 +97,9 @@ export default defineComponent({
 			"searchProjectBySlug",
 		]),
 		async submitNewTask() {
+			if (this.addingTask) return;
 			if (this.newTask) {
-				await this.addNewTask(this.newTask);
+				await this.addNewTask(this.newTask.trim());
 				this.newTask = "";
 			}
 		},
@@ -103,3 +124,24 @@ export default defineComponent({
 	},
 });
 </script>
+<style scoped>
+.tasks-container {
+	height: calc(100vh - 320px);
+	overflow: auto;
+}
+::-webkit-scrollbar {
+	width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 5px grey;
+	border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: gray;
+	border-radius: 10px;
+}
+</style>

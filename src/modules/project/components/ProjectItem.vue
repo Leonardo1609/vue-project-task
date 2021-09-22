@@ -1,8 +1,8 @@
 <template>
 	<router-link
 		:class="activeClass"
-		class="block rounded-xl px-5 py-3 text-white text-left text-base flex justify-between"
-		@click="setActiveProjectId(project.id)"
+		class="rounded-xl px-5 py-3 text-white text-left text-base flex"
+		@click="chooseProject"
 		:to="{
 			name: 'project-view',
 			params: {
@@ -18,13 +18,19 @@
 			ref="projectInput"
 			v-model="projectName"
 			:class="!isEditing && 'cursor-pointer'"
-			class="flex-1 border-none outline-none bg-transparent mr-5"
+			class="border-none outline-none bg-transparent w-5/6"
 		/>
-		<div v-if="isProjectActive && !isEditing">
+		<div
+			class="flex items-center justify-center w-1/6"
+			v-if="isProjectActive && !isEditing"
+		>
 			<i class="fas fa-pencil-alt mr-3" @click="startEditing"></i>
-			<i @click="deleteProject" class="far fa-trash-alt"></i>
+			<i class="far fa-trash-alt" @click="deleteProject"></i>
 		</div>
-		<div v-if="isProjectActive && isEditing">
+		<div
+			class="flex items-center justify-center w-1/6"
+			v-if="isProjectActive && isEditing"
+		>
 			<i class="far fa-save" @click="saveProject"></i>
 		</div>
 	</router-link>
@@ -35,6 +41,7 @@ import { defineComponent, PropType } from "vue";
 import { IProject } from "@/modules/project/types/project.interface";
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import { useToast } from "vue-toastification";
+import Swal from "sweetalert2";
 
 export default defineComponent({
 	name: "ProjectItem",
@@ -52,11 +59,10 @@ export default defineComponent({
 		},
 	},
 	methods: {
-		...mapMutations("project", ["setActiveProjectId"]),
+		...mapMutations("project", ["setActiveProjectId", "cleanTasks"]),
 		...mapActions("project", ["removeProject", "updateProject"]),
-		async deleteProject() {
-			await this.removeProject();
-			this.$router.push({ name: "no-project" });
+		chooseProject() {
+			this.setActiveProjectId(this.project.id);
 		},
 		startEditing() {
 			this.isEditing = true;
@@ -64,21 +70,27 @@ export default defineComponent({
 				(this.$refs.projectInput as HTMLInputElement).focus();
 			});
 		},
+
 		async saveProject($event: Event) {
 			$event.stopPropagation();
-			if (this.projectName === "") {
+
+			if (
+				this.projectName.trim() === "" ||
+				this.projectName.trim() === this.project.name
+			) {
 				// reset
 				this.projectName = this.project.name;
 			} else if (
 				this.projects.find(
-					(project: IProject) => project.name === this.projectName
+					(project: IProject) =>
+						project.name === this.projectName.trim()
 				) &&
-				this.projectName !== this.project.name
+				this.projectName.trim() !== this.project.name
 			) {
 				this.toast.error("The Project already exists");
 				// reset
 				this.projectName = this.project.name;
-			} else if (this.projectName !== this.project.name) {
+			} else if (this.projectName.trim() !== this.project.name) {
 				const slug = await this.updateProject({
 					id: this.project.id,
 					name: this.projectName,
@@ -89,6 +101,27 @@ export default defineComponent({
 				});
 			}
 			this.isEditing = false;
+		},
+		async deleteProject() {
+			const { isConfirmed } = await Swal.fire({
+				title: "Are you sure?",
+				icon: "error",
+				text: "This action can't be reversed",
+				showCancelButton: true,
+				confirmButtonText: "Yes",
+				cancelButtonText: "Cancel",
+			});
+			if (isConfirmed) {
+				Swal.fire({
+					text: "Wait please!!",
+					allowOutsideClick: true,
+				});
+
+				Swal.showLoading();
+				await this.removeProject();
+				this.$router.push({ name: "no-project" });
+				Swal.fire("Deleted", "success");
+			}
 		},
 	},
 	computed: {

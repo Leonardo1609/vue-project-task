@@ -20,6 +20,7 @@ export const setTasksByProyectId: Action<IProjectState, any> = async ({
 	state,
 	rootState,
 }) => {
+	commit("cleanTasks");
 	const activeProjectId = state.activeProjectId;
 	const userId = rootState.auth.user.uid;
 	commit("setLoadingTasks", true);
@@ -42,8 +43,9 @@ export const setTasksByProyectId: Action<IProjectState, any> = async ({
 
 export const addNewTask: Action<IProjectState, any> = async (
 	{ commit, state, rootState },
-	description: any
+	description: string
 ) => {
+	commit("setAddingTask", true);
 	const activeProjectId = state.activeProjectId;
 	const userId = rootState.auth.user.uid;
 	let newTask: ITask = {
@@ -67,6 +69,7 @@ export const addNewTask: Action<IProjectState, any> = async (
 	};
 
 	commit("addNewTask", newTask);
+	commit("setAddingTask", false);
 };
 export const updateTask: Action<IProjectState, any> = async (
 	{ commit, state, rootState },
@@ -105,6 +108,7 @@ export const addNewProject: Action<IProjectState, any> = async (
 		slug: slug(projectName),
 	};
 
+	commit("setAddingProject", true);
 	const docRef = await addDoc(
 		collection(db, `${userId}/project-task/projects`),
 		project
@@ -116,6 +120,7 @@ export const addNewProject: Action<IProjectState, any> = async (
 	};
 
 	commit("addNewProject", project);
+	commit("setAddingProject", false);
 };
 
 export const setProjects: Action<IProjectState, any> = async ({

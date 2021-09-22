@@ -1,7 +1,7 @@
 import { Mutation } from "vuex";
 import { IProjectState } from "../types/state.interface";
 import { IProject, ITask } from "../types/project.interface";
-import state from "./state";
+import { initialProjectState } from "./state";
 
 export const setActiveProjectId: Mutation<IProjectState> = (
 	state,
@@ -100,4 +100,22 @@ export const removeProject: Mutation<IProjectState> = (
 	state.projects = state.projects.filter(
 		(project) => project.id !== projectId
 	);
+};
+
+export const setAddingTask: Mutation<IProjectState> = (
+	state,
+	value: boolean
+) => {
+	state.addingTask = value;
+};
+
+export const setAddingProject: Mutation<IProjectState> = (
+	state,
+	value: boolean
+) => {
+	state.addingProject = value;
+};
+
+export const cleanTasks: Mutation<IProjectState> = (state) => {
+	state.tasks = []
 };

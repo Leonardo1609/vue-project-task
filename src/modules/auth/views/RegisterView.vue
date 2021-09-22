@@ -61,6 +61,11 @@
 		>
 			Create Account
 		</button>
+		<div class="mt-5">
+			<router-link class="text-white text-sm" :to="{ name: 'login' }"
+				>I've just remembered my account</router-link
+			>
+		</div>
 	</form>
 </template>
 
@@ -74,10 +79,10 @@ export default defineComponent({
 	data() {
 		return {
 			formValue: {
-				username: "Leonardo",
-				email: "leonardo@gmail.com",
-				password: "123123",
-				confirmPassword: "123123",
+				username: "",
+				email: "",
+				password: "",
+				confirmPassword: "",
 			} as IRegisterUser,
 		};
 	},
